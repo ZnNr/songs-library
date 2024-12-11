@@ -36,7 +36,7 @@ func LoadConfig() (*Config, error) {
 		DBPort:     getEnv("DB_PORT", "5432"),
 		DBUser:     getEnv("DB_USER", "postgres"),
 		DBPassword: getEnv("DB_PASSWORD", "postgres"),
-		DBName:     getEnv("DB_NAME", "music_library"),
+		DBName:     getEnv("DB_NAME", "songs-library"),
 		ServerPort: getEnv("SERVER_PORT", "8080"),
 	}, nil
 }

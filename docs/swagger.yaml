@@ -1,9 +1,233 @@
 basePath: /api/v1
+definitions:
+  models.LyricsResponse:
+    properties:
+      current_page:
+        description: Номер текущей страницы
+        type: integer
+      page_size:
+        description: Количество элементов на странице
+        type: integer
+      text:
+        description: Текст песни или куплетов
+        type: string
+      total_pages:
+        description: Общее количество страниц
+        type: integer
+    type: object
+  models.Song:
+    properties:
+      created_at:
+        description: Дата и время создания записи
+        type: string
+      group_name:
+        description: Название группы или исполнителя
+        type: string
+      id:
+        description: Уникальный идентификатор песни
+        type: integer
+      link:
+        description: Ссылка на песню (например, на YouTube)
+        type: string
+      release_date:
+        description: Дата выпуска песни
+        type: string
+      song_name:
+        description: Название песни
+        type: string
+      text:
+        description: Текст песни
+        type: string
+      updated_at:
+        description: Дата и время последнего обновления записи
+        type: string
+    type: object
+  models.SongRequest:
+    properties:
+      group:
+        description: Название группы, обязательное поле
+        type: string
+      link:
+        description: Ссылка на песню, необязательное поле
+        type: string
+      song:
+        description: Название песни, обязательное поле
+        type: string
+      text:
+        description: Текст песни, необязательное поле
+        type: string
+    required:
+    - group
+    - song
+    type: object
+  models.SongsResponse:
+    properties:
+      page:
+        description: Номер текущей страницы
+        type: integer
+      page_size:
+        description: Количество элементов на странице
+        type: integer
+      songs:
+        description: Список песен
+        items:
+          $ref: '#/definitions/models.Song'
+        type: array
+      total_items:
+        description: Общее количество песен
+        type: integer
+      total_pages:
+        description: Общее количество страниц
+        type: integer
+    type: object
 host: localhost:8080
 info:
   contact: {}
   description: API for managing music library
   title: Music Library API
   version: "1.0"
-paths: {}
+paths:
+  /songs:
+    get:
+      consumes:
+      - application/json
+      description: Get list of songs with optional filtering and pagination
+      parameters:
+      - description: Group name
+        in: query
+        name: group_name
+        type: string
+      - description: Song name
+        in: query
+        name: song_name
+        type: string
+      - description: 'From date (format: 2006-01-02)'
+        in: query
+        name: from_date
+        type: string
+      - description: 'To date (format: 2006-01-02)'
+        in: query
+        name: to_date
+        type: string
+      - description: Text content
+        in: query
+        name: text
+        type: string
+      - description: Link
+        in: query
+        name: link
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SongsResponse'
+      summary: Get songs with filtering and pagination
+      tags:
+      - songs
+    post:
+      consumes:
+      - application/json
+      description: Create a new song with information from external API
+      parameters:
+      - description: Song information
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/models.SongRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Song'
+      summary: Create new song
+      tags:
+      - songs
+  /songs/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a song by ID
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+      summary: Delete song
+      tags:
+      - songs
+    put:
+      consumes:
+      - application/json
+      description: Update existing song information
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Song information
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/models.SongRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Song'
+      summary: Update song
+      tags:
+      - songs
+  /songs/{id}/lyrics:
+    get:
+      consumes:
+      - application/json
+      description: Get song lyrics with pagination by verses
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.LyricsResponse'
+      summary: Get song lyrics
+      tags:
+      - songs
 swagger: "2.0"

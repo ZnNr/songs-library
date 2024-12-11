@@ -5,7 +5,7 @@ services:
     image: postgres:latest
     container_name: postgres_container
     environment:
-      POSTGRES_DB: music_library      # Имя базы данных
+      POSTGRES_DB: songs-library      # Имя базы данных
       POSTGRES_USER: postgres          # Имя пользователя
       POSTGRES_PASSWORD: postgres      # Пароль пользователя
     ports:

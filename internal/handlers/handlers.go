@@ -42,6 +42,21 @@ func (h *SongHandler) handleError(w http.ResponseWriter, err error) {
 	http.Error(w, message, status)
 }
 
+// @Summary Get songs with filtering and pagination
+// @Description Get list of songs with optional filtering and pagination
+// @Tags songs
+// @Accept json
+// @Produce json
+// @Param group_name query string false "Group name"
+// @Param song_name query string false "Song name"
+// @Param from_date query string false "From date (format: 2006-01-02)"
+// @Param to_date query string false "To date (format: 2006-01-02)"
+// @Param text query string false "Text content"
+// @Param link query string false "Link"
+// @Param page query int false "Page number"
+// @Param page_size query int false "Page size"
+// @Success 200 {object} models.SongsResponse
+// @Router /songs [get]
 func (h *SongHandler) GetSongs(w http.ResponseWriter, r *http.Request) {
 	h.logger.Debug("Handling GetSongs request")
 
@@ -104,6 +119,16 @@ func (h *SongHandler) respondWithJSON(w http.ResponseWriter, status int, payload
 	}
 }
 
+// @Summary Get song lyrics
+// @Description Get song lyrics with pagination by verses
+// @Tags songs
+// @Accept json
+// @Produce json
+// @Param id path int true "Song ID"
+// @Param page query int false "Page number"
+// @Param page_size query int false "Page size"
+// @Success 200 {object} models.LyricsResponse
+// @Router /songs/{id}/lyrics [get]
 func (h *SongHandler) GetLyrics(w http.ResponseWriter, r *http.Request) {
 	h.logger.Debug("Handling GetLyrics request")
 
@@ -141,6 +166,14 @@ func (h *SongHandler) GetLyrics(w http.ResponseWriter, r *http.Request) {
 	h.respondWithJSON(w, http.StatusOK, response)
 }
 
+// @Summary Create new song
+// @Description Create a new song with information from external API
+// @Tags songs
+// @Accept json
+// @Produce json
+// @Param song body models.SongRequest true "Song information"
+// @Success 201 {object} models.Song
+// @Router /songs [post]
 func (h *SongHandler) CreateSong(w http.ResponseWriter, r *http.Request) {
 	h.logger.Debug("Handling CreateSong request")
 
@@ -159,6 +192,15 @@ func (h *SongHandler) CreateSong(w http.ResponseWriter, r *http.Request) {
 	h.respondWithJSON(w, http.StatusCreated, song)
 }
 
+// @Summary Update song
+// @Description Update existing song information
+// @Tags songs
+// @Accept json
+// @Produce json
+// @Param id path int true "Song ID"
+// @Param song body models.SongRequest true "Song information"
+// @Success 200 {object} models.Song
+// @Router /songs/{id} [put]
 func (h *SongHandler) UpdateSong(w http.ResponseWriter, r *http.Request) {
 	h.logger.Debug("Handling UpdateSong request")
 
@@ -184,6 +226,14 @@ func (h *SongHandler) UpdateSong(w http.ResponseWriter, r *http.Request) {
 	h.respondWithJSON(w, http.StatusOK, song)
 }
 
+// @Summary Delete song
+// @Description Delete a song by ID
+// @Tags songs
+// @Accept json
+// @Produce json
+// @Param id path int true "Song ID"
+// @Success 204 "No Content"
+// @Router /songs/{id} [delete]
 func (h *SongHandler) DeleteSong(w http.ResponseWriter, r *http.Request) {
 	h.logger.Debug("Handling DeleteSong request")
 
