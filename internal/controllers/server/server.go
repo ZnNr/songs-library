@@ -22,7 +22,7 @@ import (
 	"github.com/ZnNr/songs-library/internal/service"
 )
 
-const path = "migrations/000001_init_schema.up.sql"
+const schema = "migrations/000001_init_schema.up.sql"
 
 // App структура приложения
 type App struct {
